@@ -1,0 +1,19 @@
+.app {
+    text-align: center;
+}
+
+.app-title {
+}
+
+.app-columns {
+    display: flex;
+}
+
+.column {
+    width: 50%;
+}
+
+.column-tab {
+    margin: 5px;
+    font-size: 16px;
+}

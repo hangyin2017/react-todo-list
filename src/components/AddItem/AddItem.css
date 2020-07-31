@@ -1,0 +1,17 @@
+.additem {
+    margin: 5px;
+}
+
+.additem-input {
+    width: 40%;
+    height: 25px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.additem-button {
+    width: 60px;
+    height: 30px;
+    margin: 5px;
+    font-size: 14px;
+}
