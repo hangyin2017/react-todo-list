@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import AddTask from '../components/AddTask/AddTask';
 import List from '../components/List/List';
-import { CardText } from 'material-ui';
 
 class App extends Component {
     state = {
@@ -20,6 +19,13 @@ class App extends Component {
      */
     handleTaskInputChange = (taskInput) => {
         this.setState({ taskInput: taskInput.target.value });
+    };
+
+    /**
+     * Add task if press Enter in the task input bar.
+     */
+    handleKeyDown = (e) => {
+        if (e.keyCode === 13) this.addTask();
     };
 
     /**
@@ -77,6 +83,7 @@ class App extends Component {
                     taskInputChange={(taskInput) =>
                         this.handleTaskInputChange(taskInput)
                     }
+                    keyDown={this.handleKeyDown}
                     addTask={this.addTask}
                 />
                 <div className='app-columns'>

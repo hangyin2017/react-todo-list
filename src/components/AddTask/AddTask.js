@@ -10,6 +10,7 @@ const AddTask = (props) => {
                 className='addtask-input'
                 value={props.taskInput}
                 onChange={props.taskInputChange}
+                onKeyDown={props.keyDown}
             ></input>
             <button className='addtask-button' onClick={props.addTask}>
                 Add
