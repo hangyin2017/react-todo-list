@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import AddTask from '../components/AddTask/AddTask';
 import List from '../components/List/List';
+import { CardText } from 'material-ui';
 
 class App extends Component {
     state = {
@@ -14,16 +15,16 @@ class App extends Component {
         taskInput: '',
     };
 
-    /* 
-    Update the task description when type in the Bar.
- */
+    /**
+     * Update the task description when type in the Bar.
+     */
     handleTaskInputChange = (taskInput) => {
         this.setState({ taskInput: taskInput.target.value });
     };
 
-    /*     
-    Add task to the To-Do list
- */
+    /**
+     * Add task to the To-Do list
+     */
     addTask = () => {
         if (this.state.taskInput === '') return;
         const newId = this.state.tasks.length + 1;
@@ -36,7 +37,24 @@ class App extends Component {
         this.setState({ tasks: updatedTasks, taskInput: '' });
     };
 
+    /**
+     * Update task status between To Do and Done
+     */
+    handleTaskUpdate = (clickedTask) => {
+        this.setState((previousState) => {
+            const tasks = [...previousState.tasks];
+            const index = tasks.indexOf(clickedTask);
+            tasks[index] = { ...clickedTask };
+            tasks[index].status =
+                tasks[index].status === 'To Do' ? 'Done' : 'To Do';
+            return { tasks };
+        });
+    };
+
     render() {
+        /**
+         * Put tasks into corresponding columns, then map the columns to the page.
+         */
         const { tasks = [] } = this.state;
         const columns = [
             {
@@ -59,13 +77,16 @@ class App extends Component {
                     taskInputChange={(taskInput) =>
                         this.handleTaskInputChange(taskInput)
                     }
-                    onAdd={this.addTask}
+                    addTask={this.addTask}
                 />
                 <div className='app-columns'>
                     {columns.map((column, index) => (
                         <div key={index} className='column'>
                             <div className='column-tab'>{column.tab}</div>
-                            <List tasks={column.tasks} />
+                            <List
+                                tasks={column.tasks}
+                                updateTask={this.handleTaskUpdate}
+                            />
                         </div>
                     ))}
                 </div>

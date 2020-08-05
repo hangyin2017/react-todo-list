@@ -11,7 +11,7 @@ const AddTask = (props) => {
                 value={props.taskInput}
                 onChange={props.taskInputChange}
             ></input>
-            <button className='addtask-button' onClick={props.onAdd}>
+            <button className='addtask-button' onClick={props.addTask}>
                 Add
             </button>
         </div>
