@@ -4,9 +4,9 @@ import './List.css';
 const List = (props) => {
     return (
         <div className='list'>
-            {props.items.map((item) => (
-                <div key={item.id} className='item'>
-                    {item.desc}
+            {props.tasks.map((task) => (
+                <div key={task.id} className='task'>
+                    {task.desc}
                 </div>
             ))}
         </div>

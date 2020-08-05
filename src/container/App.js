@@ -1,42 +1,71 @@
 import React, { Component } from 'react';
 import './App.css';
-import AddItem from '../components/AddItem/AddItem';
+import AddTask from '../components/AddTask/AddTask';
 import List from '../components/List/List';
 
 class App extends Component {
     state = {
-        items: [
+        tasks: [
             { id: 1, desc: 'aa', status: 'To Do' },
             { id: 2, desc: 'bb', status: 'To Do' },
             { id: 3, desc: 'cc', status: 'Done' },
         ],
+
+        taskInput: '',
+    };
+
+    /* 
+    Update the task description when type in the Bar.
+ */
+    handleTaskInputChange = (taskInput) => {
+        this.setState({ taskInput: taskInput.target.value });
+    };
+
+    /*     
+    Add task to the To-Do list
+ */
+    addTask = () => {
+        if (this.state.taskInput === '') return;
+        const newId = this.state.tasks.length + 1;
+        const newTask = {
+            id: newId,
+            desc: this.state.taskInput,
+            status: 'To Do',
+        };
+        const updatedTasks = [...this.state.tasks, newTask];
+        this.setState({ tasks: updatedTasks, taskInput: '' });
     };
 
     render() {
-        const { items = [] } = this.state;
+        const { tasks = [] } = this.state;
         const columns = [
             {
                 tab: 'To Do',
-                items: items.filter((item) => item.status === 'To Do'),
+                tasks: tasks.filter((task) => task.status === 'To Do'),
             },
             {
                 tab: 'Done',
-                items: items.filter((item) => item.status === 'Done'),
+                tasks: tasks.filter((task) => task.status === 'Done'),
             },
         ];
-        console.log(columns);
 
         return (
             <div className='app'>
                 <div className='app-title'>
                     <h1>To-Do List</h1>
                 </div>
-                <AddItem />
+                <AddTask
+                    taskInput={this.state.taskInput}
+                    taskInputChange={(taskInput) =>
+                        this.handleTaskInputChange(taskInput)
+                    }
+                    onAdd={this.addTask}
+                />
                 <div className='app-columns'>
                     {columns.map((column, index) => (
                         <div key={index} className='column'>
                             <div className='column-tab'>{column.tab}</div>
-                            <List items={column.items} />
+                            <List tasks={column.tasks} />
                         </div>
                     ))}
                 </div>
