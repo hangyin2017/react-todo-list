@@ -3,33 +3,55 @@ import './App.css';
 import AddTask from '../components/AddTask/AddTask';
 import List from '../components/List/List';
 
+/**
+ * @description Main app component.
+ * @constructor
+ * @param {Object} props - The props that were defined by the caller of this component.
+ */
 class App extends Component {
-    state = {
-        tasks: [
-            { id: 1, desc: 'aa', status: 'To Do' },
-            { id: 2, desc: 'bb', status: 'To Do' },
-            { id: 3, desc: 'cc', status: 'Done' },
-        ],
+    constructor(props) {
+        super(props);
 
-        taskInput: '',
-    };
+        /**
+         * @typedef {Object} ComponentState
+         * @property {Object[]} tasks - All listed tasks.
+         * @property {string} taskInput - Store the content in the task input bar.
+         */
+
+        /** @type {ComponentState} */
+        this.state = {
+            tasks: [],
+            taskInput: '',
+        };
+    }
 
     /**
-     * Update the task description when type in the Bar.
+     * @description Read the list of tasks from local storage and put into this.state.
+     */
+    componentWillMount() {
+        const toDoListTasks = localStorage.getItem('toDoListTasks') || '[]';
+        this.setState({ tasks: JSON.parse(toDoListTasks) });
+    }
+
+    /**
+     * @description Update the task description when type in the Bar.
+     * @param {Object} taskInput - Object of an input bar change event
      */
     handleTaskInputChange = (taskInput) => {
         this.setState({ taskInput: taskInput.target.value });
     };
 
     /**
-     * Add task if press Enter in the task input bar.
+     * @description Add task if press Enter in the task input bar.
+     * @param {Object} e - keyDown event
      */
     handleKeyDown = (e) => {
+        // Press Enter key
         if (e.keyCode === 13) this.addTask();
     };
 
     /**
-     * Add task to the To-Do list
+     * @description Add task to the To-Do list.
      */
     addTask = () => {
         if (this.state.taskInput === '') return;
@@ -40,11 +62,16 @@ class App extends Component {
             status: 'To Do',
         };
         const updatedTasks = [...this.state.tasks, newTask];
-        this.setState({ tasks: updatedTasks, taskInput: '' });
+        this.setState(
+            { tasks: updatedTasks, taskInput: '' },
+            // Callback to store task list in local storage.
+            this.updateLocalStorageTasks
+        );
     };
 
     /**
-     * Update task status between To Do and Done
+     * @description Update task status between To Do and Done.
+     * @param {Object} clickedTask - A task object
      */
     handleTaskUpdate = (clickedTask) => {
         this.setState((previousState) => {
@@ -54,7 +81,14 @@ class App extends Component {
             tasks[index].status =
                 tasks[index].status === 'To Do' ? 'Done' : 'To Do';
             return { tasks };
-        });
+        }, this.updateLocalStorageTasks);
+    };
+
+    /**
+     * @description Store task list in the state to local storage.
+     */
+    updateLocalStorageTasks = () => {
+        localStorage.setItem('toDoListTasks', JSON.stringify(this.state.tasks));
     };
 
     render() {
