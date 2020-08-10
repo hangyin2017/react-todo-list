@@ -10,7 +10,13 @@ const List = (props) => {
                     className='list-task'
                     onClick={() => props.updateTask(task)}
                 >
-                    {task.desc}
+                    <span className='list-task-desc'>{task.desc}</span>
+                    <input
+                        type='date'
+                        className='list-task-datePicker'
+                        value={task.date}
+                        // onChange={}
+                    ></input>
                 </div>
             ))}
         </div>

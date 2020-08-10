@@ -12,16 +12,21 @@ class App extends Component {
     constructor(props) {
         super(props);
 
+        // Get the date now in the format of 'yyyy-mm-dd'.
+        const dateNow = new Date().toISOString().slice(0, 10);
+
         /**
          * @typedef {Object} ComponentState
          * @property {Object[]} tasks - All listed tasks.
-         * @property {string} taskInput - Store the content in the task input bar.
+         * @property {string} taskInput - Store the content of the task input bar.
+         * @property {string} datePicker - Store the date of the task input date picker.
          */
 
         /** @type {ComponentState} */
         this.state = {
             tasks: [],
             taskInput: '',
+            datePicker: dateNow,
         };
     }
 
@@ -37,8 +42,8 @@ class App extends Component {
      * @description Update the task description when type in the Bar.
      * @param {Object} taskInput - Object of an input bar change event
      */
-    handleTaskInputChange = (taskInput) => {
-        this.setState({ taskInput: taskInput.target.value });
+    handleTaskInputChange = (e) => {
+        this.setState({ taskInput: e.target.value });
     };
 
     /**
@@ -60,6 +65,7 @@ class App extends Component {
             id: newId,
             desc: this.state.taskInput,
             status: 'To Do',
+            date: this.state.datePicker,
         };
         const updatedTasks = [...this.state.tasks, newTask];
         this.setState(
@@ -82,6 +88,14 @@ class App extends Component {
                 tasks[index].status === 'To Do' ? 'Done' : 'To Do';
             return { tasks };
         }, this.updateLocalStorageTasks);
+    };
+
+    /**
+     * @description Update date if the date picker's value in AddTask changes.
+     * @param {Object} e - Date picker onChange event
+     */
+    handleDateChange = (e) => {
+        this.setState({ datePicker: e.target.value });
     };
 
     /**
@@ -114,11 +128,13 @@ class App extends Component {
                 </div>
                 <AddTask
                     taskInput={this.state.taskInput}
+                    datePicker={this.state.datePicker}
                     taskInputChange={(taskInput) =>
                         this.handleTaskInputChange(taskInput)
                     }
                     keyDown={this.handleKeyDown}
                     addTask={this.addTask}
+                    dateChange={this.handleDateChange}
                 />
                 <div className='app-columns'>
                     {columns.map((column, index) => (
